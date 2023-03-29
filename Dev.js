@@ -150,9 +150,6 @@ export default function Dev() {
               Add Ad Group
             </Button>
           </Box>
-          <Button variant="contained" onClick={handleCompare}>
-            Compare
-          </Button>
         </Box>
       </Box>
     </>
