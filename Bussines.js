@@ -39,14 +39,6 @@ export default function Bus({ onChange }) {
     setAdGroupInputs(updatedInputs);
   };
 
-  const onChangeGitLab = (updatedInputs) => {
-    setGitLabInputs(updatedInputs);
-  };
-
-  const onChangeAdGroupInput = (updatedInputs) => {
-    setAdGroupInputs(updatedInputs);
-  };
-
   const handleBlur = (index, type) => {
     if (type === 'gitLab') {
       const newGitLab = [...gitLabInputs];
@@ -118,7 +110,7 @@ export default function Bus({ onChange }) {
                   onChange={(e) => {
                     const updatedInputs = [...gitLabInputs];
                     updatedInputs[index].value = e.target.value;
-                    onChangeGitLab(updatedInputs);
+                    setGitLabInputs(updatedInputs);
                   }}
                 />
                 <IconButton
@@ -159,7 +151,7 @@ export default function Bus({ onChange }) {
                   onChange={(e) => {
                     const updatedInputs = [...adGroupInputs];
                     updatedInputs[index].value = e.target.value;
-                    onChangeAdGroupInput(updatedInputs);
+                    setAdGroupInputs(updatedInputs);
                   }}
                 />
                 <IconButton
