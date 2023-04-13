@@ -8,32 +8,30 @@ import Dev from './Dev';
 import Bus from './Bussines';
 
 export default function App() {
-  const [gitLabInputs, setGitLabInputs] = useState([{ value: '' }]);
-  const [adGroupInputs, setAdGroupInputs] = useState([{ value: '' }]);
+  const [devGitLabInputs, setDevGitLabInputs] = useState([{ value: '' }]);
+  const [devAdGroupInputs, setDevAdGroupInputs] = useState([{ value: '' }]);
 
-  const handleAddGitLabInput = () => {
-    setGitLabInputs([...gitLabInputs, { value: '' }]);
+  const [busGitLabInputs, setBusGitLabInputs] = useState([{ value: '' }]);
+  const [busAdGroupInputs, setBusAdGroupInputs] = useState([{ value: '' }]);
+
+  const handleDevChange = ({ gitLabInputs, adGroupInputs }) => {
+    setDevGitLabInputs(gitLabInputs);
+    setDevAdGroupInputs(adGroupInputs);
   };
 
-  const handleRemoveGitLabInput = (index) => {
-    const updatedInputs = [...gitLabInputs];
-    updatedInputs.splice(index, 1);
-    setGitLabInputs(updatedInputs);
-  };
-
-  const handleAddAdGroupInput = () => {
-    setAdGroupInputs([...adGroupInputs, { value: '' }]);
-  };
-
-  const handleRemoveAdGroupInput = (index) => {
-    const updatedInputs = [...adGroupInputs];
-    updatedInputs.splice(index, 1);
-    setAdGroupInputs(updatedInputs);
+  const handleBusChange = ({ gitLabInputs, adGroupInputs }) => {
+    setBusGitLabInputs(gitLabInputs);
+    setBusAdGroupInputs(adGroupInputs);
   };
 
   const handleCompare = () => {
     // Do something with the inputs here
     console.log(gitLabInputs, adGroupInputs);
+  };
+
+  const validateInputs = (inputs) => {
+    console.log(inputs);
+    return inputs?.every((input) => input.value.trim().length > 0);
   };
 
   return (
@@ -48,8 +46,8 @@ export default function App() {
         }}
         style={{ paddingTop: '40px' }}
       >
-        <Dev />
-        <Bus />
+        <Dev onChange={handleDevChange} />
+        <Bus onChange={handleBusChange} />
       </Box>
       <Box
         sx={{
@@ -58,7 +56,16 @@ export default function App() {
           justifyContent: 'center',
         }}
       >
-        <Button variant="contained" onClick={handleCompare}>
+        <Button
+          variant="contained"
+          onClick={handleCompare}
+          disabled={
+            !validateInputs(devGitLabInputs) ||
+            !validateInputs(devAdGroupInputs) ||
+            !validateInputs(busGitLabInputs) ||
+            !validateInputs(busAdGroupInputs)
+          }
+        >
           Compare
         </Button>
       </Box>

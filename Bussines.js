@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, TextField, Box } from '@mui/material';
 import Box from '@mui/material/Box';
 
@@ -7,12 +7,20 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 
-export default function Bus() {
-  const [gitLabInputs, setGitLabInputs] = useState([{ value: '' }]);
-  const [adGroupInputs, setAdGroupInputs] = useState([{ value: '' }]);
+export default function Bus({ onChange }) {
+  const [gitLabInputs, setGitLabInputs] = useState([
+    { value: '', error: false },
+  ]);
+  const [adGroupInputs, setAdGroupInputs] = useState([
+    { value: '', error: false },
+  ]);
+
+  useEffect(() => {
+    onChange({ gitLabInputs, adGroupInputs });
+  }, [adGroupInputs, gitLabInputs, onChange]);
 
   const handleAddGitLabInput = () => {
-    setGitLabInputs([...gitLabInputs, { value: '' }]);
+    setGitLabInputs([...gitLabInputs, { value: '', error: false }]);
   };
 
   const handleRemoveGitLabInput = (index) => {
@@ -22,7 +30,7 @@ export default function Bus() {
   };
 
   const handleAddAdGroupInput = () => {
-    setAdGroupInputs([...adGroupInputs, { value: '' }]);
+    setAdGroupInputs([...adGroupInputs, { value: '', error: false }]);
   };
 
   const handleRemoveAdGroupInput = (index) => {
@@ -31,9 +39,32 @@ export default function Bus() {
     setAdGroupInputs(updatedInputs);
   };
 
-  const handleCompare = () => {
-    // Do something with the inputs here
-    console.log(gitLabInputs, adGroupInputs);
+  const onChangeGitLab = (updatedInputs) => {
+    setGitLabInputs(updatedInputs);
+  };
+
+  const onChangeAdGroupInput = (updatedInputs) => {
+    setAdGroupInputs(updatedInputs);
+  };
+
+  const handleBlur = (index, type) => {
+    if (type === 'gitLab') {
+      const newGitLab = [...gitLabInputs];
+      if (newGitLab[index].value.trim() === '') {
+        newGitLab[index].error = true;
+      } else {
+        newGitLab[index].error = false;
+      }
+      setGitLabInputs(newGitLab);
+    } else if (type === 'adGroup') {
+      const newAdGroup = [...adGroupInputs];
+      if (newAdGroup[index].value.trim() === '') {
+        newAdGroup[index].error = true;
+      } else {
+        newAdGroup[index].error = false;
+      }
+      setAdGroupInputs(newAdGroup);
+    }
   };
 
   return (
@@ -79,12 +110,15 @@ export default function Bus() {
                 <TextField
                   key={`gitlab-${index}`}
                   label="GitLab"
-                  value={input.value}
                   style={{ width: '400px' }}
+                  value={input.value}
+                  error={input.error}
+                  helperText={input.error ? 'Please fill in GitLab input' : ''}
+                  onBlur={() => handleBlur(index, 'gitLab')}
                   onChange={(e) => {
                     const updatedInputs = [...gitLabInputs];
                     updatedInputs[index].value = e.target.value;
-                    setGitLabInputs(updatedInputs);
+                    onChangeGitLab(updatedInputs);
                   }}
                 />
                 <IconButton
@@ -119,10 +153,13 @@ export default function Bus() {
                   label="AD Group"
                   style={{ width: '400px' }}
                   value={input.value}
+                  error={input.error}
+                  helperText={input.error ? 'Please fill in AgGroup input' : ''}
+                  onBlur={() => handleBlur(index, 'adGroup')}
                   onChange={(e) => {
                     const updatedInputs = [...adGroupInputs];
                     updatedInputs[index].value = e.target.value;
-                    setAdGroupInputs(updatedInputs);
+                    onChangeAdGroupInput(updatedInputs);
                   }}
                 />
                 <IconButton
