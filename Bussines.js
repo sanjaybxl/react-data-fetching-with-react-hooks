@@ -7,55 +7,53 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 
-export default function Bus({ onChange }) {
-  const [gitLabInputs, setGitLabInputs] = useState([
+export default function Bus(props) {
+  const busGitLabInputs = props.busGitLabInputs || [
     { value: '', error: false },
-  ]);
-  const [adGroupInputs, setAdGroupInputs] = useState([
+  ];
+  const busAdGroupInputs = props.busAdGroupInputs || [
     { value: '', error: false },
-  ]);
-
-  useEffect(() => {
-    onChange({ gitLabInputs, adGroupInputs });
-  }, [adGroupInputs, gitLabInputs, onChange]);
+  ];
 
   const handleAddGitLabInput = () => {
-    setGitLabInputs([...gitLabInputs, { value: '', error: false }]);
+    const newGitLabInputs = [...busGitLabInputs, { value: '', error: false }];
+    props.setBusGitLabInputs(newGitLabInputs);
   };
 
   const handleRemoveGitLabInput = (index) => {
-    const updatedInputs = [...gitLabInputs];
+    const updatedInputs = [...busGitLabInputs];
     updatedInputs.splice(index, 1);
-    setGitLabInputs(updatedInputs);
+    props.setBusGitLabInputs(updatedInputs);
   };
 
   const handleAddAdGroupInput = () => {
-    setAdGroupInputs([...adGroupInputs, { value: '', error: false }]);
+    const newAgGroupList = [...busAdGroupInputs, { value: '', error: false }];
+    props.setBusAdGroupInputs(newAgGroupList);
   };
 
   const handleRemoveAdGroupInput = (index) => {
-    const updatedInputs = [...adGroupInputs];
+    const updatedInputs = [...busAdGroupInputs];
     updatedInputs.splice(index, 1);
-    setAdGroupInputs(updatedInputs);
+    props.setBusAdGroupInputs(updatedInputs);
   };
 
   const handleBlur = (index, type) => {
     if (type === 'gitLab') {
-      const newGitLab = [...gitLabInputs];
+      const newGitLab = [...busGitLabInputs];
       if (newGitLab[index].value.trim() === '') {
         newGitLab[index].error = true;
       } else {
         newGitLab[index].error = false;
       }
-      setGitLabInputs(newGitLab);
+      props.setBusGitLabInputs(newGitLab);
     } else if (type === 'adGroup') {
-      const newAdGroup = [...adGroupInputs];
+      const newAdGroup = [...busAdGroupInputs];
       if (newAdGroup[index].value.trim() === '') {
         newAdGroup[index].error = true;
       } else {
         newAdGroup[index].error = false;
       }
-      setAdGroupInputs(newAdGroup);
+      props.setBusAdGroupInputs(newAdGroup);
     }
   };
 
@@ -90,7 +88,7 @@ export default function Bus({ onChange }) {
               gap: 2,
             }}
           >
-            {gitLabInputs.map((input, index) => (
+            {busGitLabInputs.map((input, index) => (
               <Box
                 sx={{
                   display: 'flex',
@@ -105,17 +103,23 @@ export default function Bus({ onChange }) {
                   style={{ width: '400px' }}
                   value={input.value}
                   error={input.error}
-                  helperText={input.error ? 'Please fill in GitLab input' : ''}
+                  helperText={
+                    input.error && input?.data !== ''
+                      ? 'Please fill in GitLab input'
+                      : input?.data === ''
+                      ? 'Invalid data'
+                      : ''
+                  }
                   onBlur={() => handleBlur(index, 'gitLab')}
                   onChange={(e) => {
-                    const updatedInputs = [...gitLabInputs];
+                    const updatedInputs = [...busGitLabInputs];
                     updatedInputs[index].value = e.target.value;
-                    setGitLabInputs(updatedInputs);
+                    props.setBusGitLabInputs(updatedInputs);
                   }}
                 />
                 <IconButton
                   onClick={() =>
-                    handleRemoveGitLabInput(gitLabInputs.length - 1)
+                    handleRemoveGitLabInput(busGitLabInputs.length - 1)
                   }
                 >
                   <DeleteIcon />
@@ -131,7 +135,7 @@ export default function Bus({ onChange }) {
               gap: 2,
             }}
           >
-            {adGroupInputs.map((input, index) => (
+            {busAdGroupInputs.map((input, index) => (
               <Box
                 sx={{
                   display: 'flex',
@@ -146,17 +150,23 @@ export default function Bus({ onChange }) {
                   style={{ width: '400px' }}
                   value={input.value}
                   error={input.error}
-                  helperText={input.error ? 'Please fill in AgGroup input' : ''}
+                  helperText={
+                    input.error && input?.data !== ''
+                      ? 'Please fill in AgGroup input'
+                      : input?.data === ''
+                      ? 'Invalid data'
+                      : ''
+                  }
                   onBlur={() => handleBlur(index, 'adGroup')}
                   onChange={(e) => {
-                    const updatedInputs = [...adGroupInputs];
+                    const updatedInputs = [...busAdGroupInputs];
                     updatedInputs[index].value = e.target.value;
-                    setAdGroupInputs(updatedInputs);
+                    props.setBusAdGroupInputs(updatedInputs);
                   }}
                 />
                 <IconButton
                   onClick={() =>
-                    handleRemoveAdGroupInput(adGroupInputs.length - 1)
+                    handleRemoveAdGroupInput(busAdGroupInputs.length - 1)
                   }
                 >
                   <DeleteIcon />
